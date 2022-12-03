@@ -91,7 +91,6 @@ import { HomeFilled, Delete, Edit } from '@element-plus/icons-vue'
 import axios from 'axios'
 
 const pageArray = ['index', 'asmr', 'acg', 'else']
-const pageObject = {id: '', title: '', url: '', description: ''}
 const pageIndex = ref('index')  // 页面索引
 const dialogSubmitState = ref(false)    // 添加对话框
 const dialogDeleteState = ref(false)    // 删除对话框
@@ -99,8 +98,8 @@ const dialogEditState = ref(false)      // 编辑对话框
 let deleteColumnId = 0
 
 const tableData = reactive({index: [], asmr: [], acg: [], else: []})  // 页面数据
-const formData = reactive({ data: pageObject})    // 添加暂存数据
-const editData = reactive({ data: pageObject})    // 编辑暂存数据
+const formData = reactive({ data: {} })    // 添加暂存数据
+const editData = reactive({ data: {} })    // 编辑暂存数据
 
 function onSelectIndex(index) {
   pageIndex.value = index
@@ -109,7 +108,7 @@ function onSelectIndex(index) {
 function onSubmit() {
   axios.post('/api/add_url?page=' + pageIndex.value, formData.data)
   .then(res => {
-    formData.data = pageObject
+    formData.data = {}  // 置空
     dialogSubmitState.value = false
     getURL(pageIndex.value)
   })
@@ -119,15 +118,14 @@ function onSubmit() {
 }
 
 function onClickEdit(data) {
-  dialogEditState.value = true
   // 深拷贝，防止修改页面值
   editData.data = JSON.parse(JSON.stringify(data))
+  dialogEditState.value = true
 }
 
 function onEdit() {
   axios.post('/api/edit_url?page=' + pageIndex.value, editData.data)
   .then(res => {
-    editData.data = pageObject
     dialogEditState.value = false
     getURL(pageIndex.value)
   })
@@ -137,8 +135,8 @@ function onEdit() {
 }
 
 function onClickDelete(id) {
-  dialogDeleteState.value = true
   deleteColumnId = id
+  dialogDeleteState.value = true
 }
 
 function onDelete() {
