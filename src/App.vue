@@ -79,7 +79,7 @@ function onSelect(index) {
 }
 
 function onSubmit() {
-  axios.post('/api/add_url/' + page.value, formData)
+  axios.post('/api/add_url?' + page.value, formData)
   .then(res => {
     formData.title = ''
     formData.url = ''
@@ -100,7 +100,7 @@ function onClickDelete(title) {
 function onDelete() {
   var data = {};
   data.title = deleteTitle.value;
-  axios.post('/api/del_url/' + page.value, data)
+  axios.post('/api/del_url?' + page.value, data)
   .then(res => {
     dialogDeleteState.value = false
     getURL()
@@ -111,7 +111,7 @@ function onDelete() {
 }
 
 function getURL() {
-  axios.get('/api/get_url/' + page.value)
+  axios.get('/api/get_url?' + page.value)
   .then(res => {
     tableData.value = res.data.data
   })
